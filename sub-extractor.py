@@ -27,11 +27,11 @@ class File:
     def move_to(self, destination):
         old_path = self.path
         new_path = os.path.join(destination, self.name + self.extension)
-        try:
-            shutil.move(old_path, new_path)
-        except FileExistsError:
+        #if the file already exists
+        if os.path.exists(new_path):
             logging.warning("file %s already exists", new_path)
             global REPLACE_ALL
+            logging.debug("replace all: %s", REPLACE_ALL)
             answer = "n"
             if not REPLACE_ALL:
                 print("replace existing file? ([y]es / [n]o  /[a]ll)]")
@@ -43,6 +43,7 @@ class File:
                 shutil.move(old_path, new_path)
             else:
                 return
+        shutil.move(old_path, new_path)
         self.path = new_path
         logging.debug("moved %s to %s", old_path, new_path)
     
@@ -50,11 +51,11 @@ class File:
         # changes the name of the file keeping the extension and path
         old_path = self.path
         new_path = os.path.join(os.path.dirname(old_path), new_name + self.extension)
-        try:
-            os.rename(old_path, new_path)
-        except FileExistsError:
+        # if the file already exists
+        if os.path.exists(new_path):
             logging.warning("file %s already exists", new_path)
             global REPLACE_ALL
+            logging.debug("replace all: %s", REPLACE_ALL)
             answer = "n"
             if not REPLACE_ALL:
                 print("replace existing file? ([y]es / [n]o  /[a]ll)]")
@@ -65,11 +66,15 @@ class File:
 
             if answer.lower() == "y" or REPLACE_ALL:
                 logging.info("replacing existing file %s", new_path)
-                os.replace(old_path, new_path)
             else:
+                # remove extracted file
+                logging.debug("removing %s", old_path)
+                os.remove(old_path)
                 return
+        os.replace(old_path, new_path)
         self.path = new_path
         logging.debug("renamed %s to %s", old_path, new_path)
+
 
     
     def _find_episode_number(self):
