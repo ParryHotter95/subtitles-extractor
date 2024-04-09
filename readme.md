@@ -20,7 +20,7 @@ You download subtitles pack in .zip archive to the same folder. There might be a
 'Orphan Black (2013) - S02E08 - Variable and Full of Perturbation (1080p BluRay x265 Ghost).mkv'
 'Orphan Black (2013) - S02E09 - Things Which Have Never Yet Been Done (1080p BluRay x265 Ghost).mkv'
 'Orphan Black (2013) - S02E10 - By Means Which Have Never Yet Been Tried (1080p BluRay x265 Ghost).mkv'
- orphan-black-second-season_english-1590736.zip
+ orphan-black-second-season_english-1590736.zip`
 
 Archive content is:  
 `$ zipinfo -1 test/orphan-black-second-season_english-1590736.zip
@@ -82,6 +82,22 @@ Full content of a folder after running the script:
 'Orphan Black (2013) - S02E10 - By Means Which Have Never Yet Been Tried (1080p BluRay x265 Ghost).srt'
  orphan-black-second-season_english-1590736.zip`
 
+You can play with files in `/test` folder, modifying its content to see how it behaves in different conditions (adding `--verbose` flag may be useful).
+
+Script is asking user before overwriting anything. You can check that by running a script twice:
+
+`$ python3 sub-extractor.py ./test
+INFO:root:selected path: ./test
+INFO:root:matched subtitle for episode 1 is ./test/tmp/Orphan.Black.S02E01.HDTV.x264-LOL.srt
+[...]
+INFO:root:matched subtitle for episode 10 is ./test/tmp/Orphan.Black.S02E10.HDTV.x264-LOL.srt`
+
+`$ python3 sub-extractor.py ./test
+INFO:root:selected path: ./test
+INFO:root:matched subtitle for episode 1 is ./test/tmp/Orphan.Black.S02E01.HDTV.x264-LOL.srt
+WARNING:root:file ./test/Orphan Black (2013) - S02E01 - Nature Under Constraint and Vexed (1080p BluRay x265 Ghost).srt already exists
+replace existing file? ([y]es / [n]o  /[a]ll)`
+
 ## Syntax
 `python3 sub-extractor.py /target/directory [--verbose]`
 
@@ -89,7 +105,7 @@ Full content of a folder after running the script:
 
 Adding `--verbose` flag will show you detailed output if you want to inspect script's behavior.
 
-
 ## Limitations and TO-DO
 - Currently only one season can be processed at the time - script only extracts episode number from filenames, but ignores season number. For example if our `test/orphan-black-second-season_english-1590736.zip` file would contain `*S03E01*.srt` file instead of `*S02E01*.srt`, it would still match its name to `Orphan Black (2013) - S02E01 -*.mkv`
 - there are hardcoded file formats which are being recognized as subtitles and videos
+- no option `[N]ever` when asking if overwrite
