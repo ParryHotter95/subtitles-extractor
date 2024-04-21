@@ -80,28 +80,22 @@ class File:
     def _find_episode_number(self):
         # find season number and episode number by matching S<season number> and E<episode number> in filename
         # build regex pattern
-        pattern = re.compile(r"S[0-9]+E[0-9]+")
-        # find episode number in filename
-        match = re.findall(pattern, self.name)
-        if len(match) == 1:
-            logging.debug("match in %s ---> %s", self.name, match[0])
-            season_num, episode_num = match[0].split("E")
-            season_num = int(season_num.replace("S", ""))
-            episode_num = int(episode_num)
-            logging.debug(
-                "season number: %d, episode number: %d", season_num, episode_num
-            )
-            return episode_num
-        else:
-            if len(match) > 1:
-                logging.error(
-                    "there should be exactly one episode number in the filename, found %d",
-                    len(match),
+        patterns = [r"S[0-9]+E[0-9]+", r"[0-9]+E[0-9]+", r"[0-9]+x[0-9]+"]
+        for pattern in patterns:
+            pattern = re.compile(pattern)
+            # find episode number in filename
+            match = re.findall(pattern, self.name)
+            if len(match) == 1:
+                logging.debug("match in %s ---> %s", self.name, match[0])
+                season_num, episode_num = match[0].split("E")
+                season_num = int(season_num)
+                episode_num = int(episode_num)
+                logging.debug(
+                    "season number: %d, episode number: %d", season_num, episode_num
                 )
-            if len(match) == 0:
-                logging.error("no episode number found in %s", self.name)
-            return None
-
+                return episode_num
+        logging.error("Couldn't find episode number in %s", self.name)
+        return None
 
 # set up logging level
 if "--verbose" in sys.argv:
