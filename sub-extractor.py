@@ -206,13 +206,13 @@ for video in videos:
             logging.warning(
                 "no subtitle found for episode number %d", video.episode_number
             )
-            break
+            continue
         if len(matched_subtitle) > 1:
             logging.warning(
                 "more than one subtitle found for episode number %d",
                 video.episode_number,
             )
-            break
+            continue
         matched_subtitle = matched_subtitle[0]
         logging.info(
             "matched subtitle for episode %s is %s",
